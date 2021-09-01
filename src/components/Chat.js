@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { selectRoomId } from "../features/appSlice";
 import { db } from "../firebase";
 import ChatInput from "./ChatInput";
+import Message from "./Message";
 const Chat = () => {
   const chatRef = useRef(null);
 
@@ -14,6 +15,16 @@ const Chat = () => {
   const [roomDetails] = useDocument(
     roomId && db.collection("rooms").doc(roomId)
   );
+
+  const [roomMessages, loading] = useCollection(
+    roomId && db.collection("rooms").doc(roomId).collection("messages")
+  );
+
+  useEffect(() => {
+    chatRef?.current?.scrollIntoView({
+      behavior: "smooth",
+    });
+  }, [roomId, loading]);
 
   return (
     <ChatContainer>
@@ -31,7 +42,22 @@ const Chat = () => {
             </p>
           </HeaderRight>
         </Header>
-        <ChatMessages></ChatMessages>
+        <ChatMessages>
+          {roomMessages?.docs.map((doc) => {
+            const { message, timestamp, user, userImage } = doc.data();
+            console.log(message);
+            return (
+              <Message
+                key={doc.id}
+                message={message}
+                timestamp={timestamp}
+                user={user}
+                userImage={userImage}
+              />
+            );
+          })}
+          <ChatBottom ref={chatRef} />
+        </ChatMessages>
         <ChatInput
           chatRef={chatRef}
           channelName={roomDetails?.data().name}
@@ -43,6 +69,10 @@ const Chat = () => {
 };
 
 export default Chat;
+
+const ChatBottom = styled.div`
+  padding-bottom: 200px;
+`;
 
 const ChatMessages = styled.div``;
 
