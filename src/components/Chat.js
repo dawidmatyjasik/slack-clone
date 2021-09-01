@@ -44,13 +44,13 @@ const Chat = () => {
         </Header>
         <ChatMessages>
           {roomMessages?.docs.map((doc) => {
-            const { message, timestamp, user, userImage } = doc.data();
-            console.log(message);
+            const { message, timeStamp, user, userImage } = doc.data();
+            console.log(doc.data());
             return (
               <Message
                 key={doc.id}
                 message={message}
-                timestamp={timestamp}
+                timestamp={timeStamp}
                 user={user}
                 userImage={userImage}
               />

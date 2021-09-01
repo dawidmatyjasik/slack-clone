@@ -17,7 +17,7 @@ export default function ChatInput({ channelName, channelId, chatRef }) {
 
     db.collection("rooms").doc(channelId).collection("messages").add({
       message: input,
-      timeStamp: firebase.firestore.FieldValue.serverTimestamp(),
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       user: "Dawid Spisak",
       userImage: "",
     });
